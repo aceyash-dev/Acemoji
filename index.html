@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acemoji - Standard Edition</title>
+    <style>
+        /* CSS Variables - Clean, Flat, Professional Standard */
+        :root {
+            --bg-color: #f9fafb;
+            --surface-color: #ffffff;
+            --surface-hover: #f3f4f6;
+            --border-color: #e5e7eb;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --accent-color: #2563eb;
+            --accent-hover: #1d4ed8;
+            --success-color: #059669;
+            --success-bg: #d1fae5;
+            --border-radius: 8px;
+            --transition: 0.2s ease;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #0d1117;
+                --surface-color: #161b22;
+                --surface-hover: #21262d;
+                --border-color: #30363d;
+                --text-primary: #c9d1d9;
+                --text-secondary: #8b949e;
+                --accent-color: #58a6ff;
+                --accent-hover: #79c0ff;
+                --success-color: #3fb950;
+                --success-bg: rgba(46, 160, 67, 0.15);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .header-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .stats-badge {
+            font-size: 0.85rem;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            padding: 4px 12px;
+            border-radius: 16px;
+            color: var(--text-secondary);
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            background: var(--surface-color);
+            padding: 6px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            margin-bottom: 24px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 10px 16px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background var(--transition), color var(--transition);
+        }
+
+        .tab-btn:hover {
+            background: var(--surface-hover);
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            background: var(--bg-color);
+            color: var(--accent-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Search */
+        .search-container {
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 16px 20px 16px 45px;
+            font-size: 1rem;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            color: var(--text-primary);
+            box-sizing: border-box;
+            transition: border-color var(--transition), box-shadow var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        /* Grids */
+        .tab-content {
+            display: none;
+            width: 100%;
+            max-width: 1400px;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .tab-content.active {
+            display: flex;
+        }
+
+        .grid {
+            display: grid;
+            gap: 16px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .grid-emojis { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+        .grid-fonts { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+
+        /* Cards */
+        .card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            transition: border-color var(--transition), box-shadow var(--transition);
+            contain: content; /* Performance optimization */
+        }
+
+        .card:hover {
+            border-color: var(--text-secondary);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .card-emoji-center {
+            align-items: center;
+            text-align: center;
+        }
+
+        .emoji-char {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+        }
+
+        .emoji-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            text-transform: capitalize;
+            min-height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .emoji-group {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            background: var(--surface-hover);
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        .font-name {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 6px;
+        }
+
+        .font-display {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            word-break: break-all;
+            min-height: 3rem;
+            line-height: 1.4;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .btn {
+            background: var(--surface-hover);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: var(--border-color);
+        }
+
+        .btn-primary {
+            background: transparent;
+            color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-color);
+            color: #fff;
+        }
+
+        .btn-success {
+            background: var(--success-bg) !important;
+            color: var(--success-color) !important;
+            border-color: var(--success-color) !important;
+        }
+
+        /* OS Variants */
+        .os-variants {
+            display: none;
+            justify-content: space-between;
+            width: 100%;
+            padding: 12px;
+            background: var(--surface-hover);
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 8px;
+            box-sizing: border-box;
+        }
+
+        .os-variants.active {
+            display: flex;
+        }
+
+        .os-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        .os-icon img {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 4px;
+        }
+
+        .loading, .no-results {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            padding: 40px;
+            width: 100%;
+        }
+
+        /* Infinite Scroll Sentinel */
+        #sentinel {
+            height: 40px;
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 class="header-title">📋 Acemoji</h1>
+        <div class="stats-badge" id="statsBadge">Initializing Database...</div>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('emoji-tab', this)">3500+ Emojis</button>
+        <button class="tab-btn" onclick="switchTab('font-tab', this)">135 Typography Fonts</button>
+    </div>
+
+    <div class="search-container">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" class="search-input" placeholder="Search emojis by name, group, or type text for fonts..." autocomplete="off">
+    </div>
+
+    <div id="emoji-tab" class="tab-content active">
+        <div id="loadingIndicator" class="loading">Fetching Official Unicode Data...</div>
+        <div class="grid grid-emojis" id="emojiGrid"></div>
+        <div id="sentinel"></div> </div>
+
+    <div id="font-tab" class="tab-content">
+        <div class="grid grid-fonts" id="fontGrid"></div>
+    </div>
+
+    <script>
+        // --- 1. CORE DATA STRUCTURES ---
+
+        let allEmojis = [];
+        let filteredEmojis = [];
+        let renderLimit = 0;
+        const CHUNK_SIZE = 100;
+
+        // Base alphabets for Font Matrix
+        const normalChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        
+        const baseAlphabets = {
+            'Normal': 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+            'Serif Bold': '𝐀𝐁𝐂𝐃𝐄𝐅𝐆𝐇𝐈𝐉𝐊𝐋𝐌𝐍𝐎𝐏𝐐𝐑𝐒𝐓𝐔𝐕𝐖𝐗𝐘𝐙𝐚𝐛𝐜𝐝𝐞𝐟𝐠𝐡𝐢𝐣𝐤𝐥𝐦𝐧𝐨𝐩𝐪𝐫𝐬𝐭𝐮𝐯𝐰𝐱𝐲𝐳𝟎𝟏𝟐𝟑𝟒𝟓𝟔𝟗𝟖𝟗',
+            'Serif Italic': '𝐴𝐵𝐶𝐷𝐸𝐹𝐺𝐻𝐼𝐽𝐾𝐿𝑀𝑁𝑂𝑃𝑄𝑅𝑆𝑇𝑈𝑉𝑊𝑋𝑌𝑍𝑎𝑏𝑐𝑑𝑒𝑓𝑔ℎ𝑖𝑗𝑘𝑙𝑚𝑛𝑜𝑝𝑞𝑟𝑠𝑡𝑢𝑣𝑤𝑥𝑦𝑧0123456789',
+            'Serif Bold Italic': '𝑨𝑩𝑪𝑫𝑬𝑭𝑮𝑯𝑰𝑱𝑲𝑳𝑴𝑵𝑶𝑷𝑸𝑹𝑺𝑻𝑼𝑽𝑾𝑿𝒀Զ𝒂𝒃𝒄𝒅𝒆𝒇𝒈𝒉𝒊𝒋𝒌𝒍𝒎𝒏𝒐𝒑𝒒𝒓𝒔𝒕𝒖𝒗𝒘𝒙𝒚𝒛𝟎𝟏𝟐𝟑𝟒𝟓𝟔𝟕𝟖𝟗',
+            'Sans': '𝖠𝖡𝖢𝖣𝖤𝖥𝖦𝖧𝖨𝖩𝖪𝖫𝖬𝖭𝖮𝖯𝖰𝖱𝖲𝖳𝖴𝖵𝖶𝖷𝖸𝖹𝖺𝖻𝖼𝖽𝖾𝖿𝗀𝗁𝗂𝗃𝗄𝗅𝗆𝗇𝗈𝗉𝗊𝗋𝗌𝗍𝗎𝗏𝗐𝗑𝗒𝗓𝟢𝟣𝟤𝟥𝟦𝟧𝟨𝟩𝟪𝟫',
+            'Sans Bold': '𝗔𝗕𝗖𝗗𝗘𝗙𝗚𝗛𝗜𝗝𝗞𝗟𝗠𝗡𝗢𝗣𝗤𝗥𝗦𝗧𝗨𝗩𝗪𝗫𝗬𝗭𝗮𝗯𝗰𝗱𝗲𝗳𝗴𝗵𝗶𝗷𝗸𝗹𝗺𝗻𝗼𝗽𝗾𝗿𝘀𝘁𝘂𝘃𝘄𝘅𝘆𝘇𝟬𝟭𝟮𝟯𝟰𝟱𝟲𝟳𝟴𝟵',
+            'Sans Italic': '𝘈𝘉𝘊𝘋𝘌𝘍𝘎𝘏𝘐𝘑𝘒𝘓𝘔𝘕𝘖𝘗𝘘𝘙𝘚𝘛𝘜𝘝𝘞𝘟𝘠𝘡𝘢𝘣𝘤𝘥𝘦𝘧𝘨𝘩𝘪𝘫𝘬𝘭𝘮𝘯𝘰𝘱𝘲𝘳𝘴𝘵𝘶𝘷𝘸𝘹𝘺𝘻0123456789',
+            'Sans Bold Italic': '𝘼𝘽𝘾𝘿𝙀𝙁𝙂𝙃𝙄𝙅𝙆𝙇𝙈𝙉𝙊𝙋𝙌𝙍𝙎𝙏𝙐𝙑𝙒𝙓𝙔𝙕𝙖𝙗𝙘𝙙𝙚𝙛𝙜𝙝𝙞𝙟𝙠𝙡𝙢𝙣𝙤𝙥𝙦𝙧𝙨𝙩𝙪𝙫𝙬𝙭𝙮𝙯0123456789',
+            'Monospace': '𝙰𝙱𝙲𝙳𝙴𝙵𝙶𝙷𝙸𝙹𝙺𝙻𝙼𝙽𝙾𝙿𝚀𝚁𝚂𝚃𝚄𝚅𝚆𝚇𝚈𝚉𝚊𝚋𝚌𝚍𝚎𝚏𝚐𝚑𝚒𝚓𝚔𝚕𝚖𝚗𝚘𝚙𝚚𝚛𝚜𝚝𝚞𝚟𝚠𝚡𝚢𝚣𝟶𝟷𝟸𝟹𝟺𝟻𝟼𝟽𝟾𝟿',
+            'Script': '𝒜ℬ𝒞𝒟ℰℱ𝒢ℋℐ𝒥𝒦ℒℳ𝒩𝒪𝒫𝒬ℛ𝒮𝒯𝒰𝒱𝒲𝒳𝒴𝒵𝒶𝒷𝒸𝒹ℯ𝒻ℊ𝒽𝒾𝒿𝓀𝓁𝓂𝓃ℴ𝓅𝓆𝓇𝓈𝓉𝓊𝓋𝓌𝓍𝓎𝓏0123456789',
+            'Script Bold': '𝓐𝓑𝓒𝓓𝓔𝓕𝓖𝓗𝓘𝓙𝓚𝓛𝓜𝓝𝓞𝓟𝓠𝓡𝓢𝓣𝓤𝓥𝓦𝓧𝓨𝓩𝓪𝓫𝓬𝓭𝓮𝓯𝓰𝓱𝓲𝓳𝓴𝓵𝓶𝓷𝓸𝓹𝓺𝓻𝓼𝓽𝓾𝓿𝔀𝔁𝔂𝔃0123456789',
+            'Fraktur': '𝔄𝔅ℭ𝔇𝔈𝔉𝔊ℌℑ𝔍𝔎𝔏𝔐𝔑𝔒𝔓𝔔ℜ𝔖𝔗𝔘𝔙𝔚𝔛𝔜ℨ𝔞𝔟𝔠𝔡𝔢𝔣𝔤𝔥𝔦𝔧𝔨𝔩𝔪𝔫𝔬𝔭𝔮𝔯𝔰𝔱𝔲𝔳𝔴𝔵𝔶𝔷0123456789',
+            'Fraktur Bold': '𝕬𝕭𝕮𝕯𝕰𝕱𝕲𝕳𝕴𝕵𝕶𝕷𝕸𝕹𝕺𝕻𝕼𝕽𝕾𝕿𝖀𝖁𝖂𝖃𝖄𝖅𝖆𝖇𝖈𝖉𝖊𝖋𝖌𝖍𝖎𝖏𝖐𝖑𝖒𝖓𝖔𝕻𝖖𝖗𝖘𝖙𝖚𝖛𝖜𝖝𝖞𝖟0123456789',
+            'Double Struck': '𝔸𝔹ℂ𝔻𝔼𝔽𝔾ℍ𝕀𝕁𝕂𝕃𝕄ℕ𝕆ℙℚℝ𝕊𝕋𝕌𝕍𝕎𝕏𝕐ℤ𝕒𝕓𝕔𝕕𝕖𝕗𝕘𝕙𝕚𝕛𝕜𝕝𝕞𝕟𝕠𝕡𝕢𝕣𝕤𝕥𝕦𝕧𝕨𝕩𝕪𝕫𝟘𝟙𝟚𝟛𝟟𝟝𝟞𝟟𝟠𝟡',
+            'Small Caps': 'ᴀʙᴄᴅᴇғɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢᴀʙᴄᴅᴇғɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢ0123456789'
+        };
+
+        // Text Decorators (Modifiers)
+        const decorators = {
+            '': '', // Base
+            'Underlined': '\u0332',
+            'Double Underline': '\u0333',
+            'Strikethrough': '\u0336',
+            'Overline': '\u0305',
+            'Slash': '\u0338',
+            'Wavy': '\u0330',
+            'Crossed': '\u0337',
+            'Dots Below': '\u0324'
+        };
+
+        // Special Enclosed Fonts (Independent)
+        const specialFonts = {
+            'Circled': 'ⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ⓪①②③④⑤⑥⑦⑧⑨',
+            'Neg Circled': '🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩0123456789',
+            'Squared': '🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉0123456789',
+            'Parenthesized': '⒜⒝⒞⒟⒠⒡⒢⒣⒤⒥⒦⒧⒨⒩⒪⒫⒬⒭⒮⒯⒰⒱⒲⒳⒴⒵⒜⒝⒞⒟⒠⒡⒢⒣⒤⒥⒦⒧⒨⒩⒪⒫⒬⒭⒮⒯⒰⒱⒲⒳⒴⒵⑴⑵⑶⑷⑸⑹⒧⒨⒩',
+            'Fullwidth': 'ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ０１２３４５６７８９',
+            'Leetspeak': '48CD3F6H1JKLMN0PQR57UVWXY248cd3f6h1jklmn0pqr57uvwxy20123456789',
+            'Upside Down': '∀qƆpƎℲפHIſʞ˥WNOԀQᴚS⊥∩ΛMX⅄Zɐqɔpǝɟƃɥıɾʞlɯuodbɹsʇnʌʍxʎz0123456789'
+        };
+
+        const allFontsMatrix = [];
+
+        // Generate exactly 135 combinations
+        // 14 Base Alphabets * 9 Decorators = 126
+        Object.keys(baseAlphabets).forEach(baseName => {
+            if(baseName === 'Normal') return; // Skip default unstyled
+            Object.keys(decorators).forEach(decName => {
+                const fullName = decName ? `${baseName} ${decName}` : baseName;
+                allFontsMatrix.push({ name: fullName, map: baseAlphabets[baseName], mod: decorators[decName] });
+            });
+        });
+
+        // Add 7 Specials = 133
+        Object.keys(specialFonts).forEach(specName => {
+            allFontsMatrix.push({ name: specName, map: specialFonts[specName], mod: specName === 'Upside Down' ? 'reverse' : '' });
+        });
+        
+        // Add 2 Glitch/Zalgo to hit 135
+        allFontsMatrix.push({ name: 'Zalgo Light', map: baseAlphabets['Normal'], mod: 'zalgo1' });
+        allFontsMatrix.push({ name: 'Zalgo Heavy', map: baseAlphabets['Normal'], mod: 'zalgo2' });
+
+
+        // --- 2. DOM ELEMENTS ---
+        const emojiGrid = document.getElementById('emojiGrid');
+        const fontGrid = document.getElementById('fontGrid');
+        const searchInput = document.getElementById('searchInput');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const sentinel = document.getElementById('sentinel');
+        const statsBadge = document.getElementById('statsBadge');
+
+        // --- 3. DATA FETCHING (3500+ Official Emojis) ---
+        async function fetchOfficialEmojis() {
+            try {
+                // Using standard unpkg JSON for unicode emojis (FOSS, robust, complete)
+                const response = await fetch('https://unpkg.com/unicode-emoji-json@0.4.0/data-by-emoji.json');
+                const data = await response.json();
+                
+                allEmojis = Object.keys(data).map(char => ({
+                    char: char,
+                    name: data[char].name,
+                    group: data[char].group
+                }));
+
+                filteredEmojis = [...allEmojis];
+                statsBadge.innerText = `${allEmojis.length} Emojis Loaded`;
+                loadingIndicator.style.display = 'none';
+                
+                renderChunk(); // Start rendering
+                setupIntersectionObserver();
+            } catch (error) {
+                console.error("Fetch failed, using local fallback.", error);
+                // Fallback core set if completely offline
+                allEmojis = [
+                    { char: '😀', name: 'grinning face', group: 'Smileys & Emotion' },
+                    { char: '🚀', name: 'rocket', group: 'Travel & Places' },
+                    { char: '💻', name: 'laptop', group: 'Objects' },
+                    { char: '🔥', name: 'fire', group: 'Activities' },
+                    { char: '❤️', name: 'red heart', group: 'Smileys & Emotion' }
+                ];
+                filteredEmojis = [...allEmojis];
+                statsBadge.innerText = 'Offline Mode (Core Only)';
+                loadingIndicator.style.display = 'none';
+                renderChunk();
+            }
+        }
+
+        // --- 4. RENDER LOGIC ---
+
+        // Virtual Pagination for Emojis
+        function renderChunk() {
+            if (renderLimit >= filteredEmojis.length) return;
+
+            const fragment = document.createDocumentFragment();
+            const chunk = filteredEmojis.slice(renderLimit, renderLimit + CHUNK_SIZE);
+
+            chunk.forEach((emoji, index) => {
+                const globalIndex = renderLimit + index;
+                const card = document.createElement('div');
+                card.className = 'card card-emoji-center';
+                
+                card.innerHTML = `
+                    <div class="emoji-char">${emoji.char}</div>
+                    <div class="emoji-name">${emoji.name}</div>
+                    <div class="emoji-group">${emoji.group}</div>
+                    
+                    <div class="os-variants" id="os-${globalIndex}">
+                        <div class="os-icon"><img src="https://emojicdn.elk.sh/${emoji.char}?style=apple" alt="Apple" onerror="this.parentElement.style.display='none'"><span>Apple</span></div>
+                        <div class="os-icon"><img src="https://emojicdn.elk.sh/${emoji.char}?style=google" alt="Google" onerror="this.parentElement.style.display='none'"><span>Google</span></div>
+                        <div class="os-icon"><img src="https://emojicdn.elk.sh/${emoji.char}?style=samsung" alt="Samsung" onerror="this.parentElement.style.display='none'"><span>Samsung</span></div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn" onclick="document.getElementById('os-${globalIndex}').classList.toggle('active')">
+                            Compare Vendors
+                        </button>
+                        <button class="btn btn-primary" onclick="copyText(this, '${emoji.char}')">
+                            Copy Emoji
+                        </button>
+                    </div>
+                `;
+                fragment.appendChild(card);
+            });
+
+            emojiGrid.appendChild(fragment);
+            renderLimit += CHUNK_SIZE;
+        }
+
+        // Font Rendering Logic
+        function generateFontString(text, fontObj) {
+            let result = '';
+            let mapArr = Array.from(fontObj.map);
+            let toProcess = fontObj.mod === 'reverse' ? text.split('').reverse().join('') : text;
+            
+            for (let i = 0; i < toProcess.length; i++) {
+                const char = toProcess[i];
+                const index = normalChars.indexOf(char);
+                let newChar = index !== -1 ? mapArr[index] : char;
+                
+                if (fontObj.mod && !['reverse', 'zalgo1', 'zalgo2'].includes(fontObj.mod)) {
+                    newChar += fontObj.mod;
+                }
+                result += newChar;
+            }
+
+            if (fontObj.mod === 'zalgo1') result = result.split('').map(c => c + '\u030d\u0324').join('');
+            if (fontObj.mod === 'zalgo2') result = result.split('').map(c => c + '\u030d\u030e\u0304\u0310\u0324\u0317\u032d').join('');
+            
+            return result;
+        }
+
+        function renderFonts(inputText) {
+            fontGrid.innerHTML = '';
+            const textToConvert = inputText.trim() === '' ? 'Acemoji Typography' : inputText;
+
+            const fragment = document.createDocumentFragment();
+
+            allFontsMatrix.forEach(fontObj => {
+                const fancyText = generateFontString(textToConvert, fontObj);
+                const card = document.createElement('div');
+                card.className = 'card';
+                
+                card.innerHTML = `
+                    <div class="font-name">${fontObj.name}</div>
+                    <div class="font-display">${fancyText}</div>
+                    <div class="btn-group" style="margin-top: auto;">
+                        <button class="btn btn-primary" onclick="copyText(this, \`${fancyText.replace(/\\/g, '\\\\').replace(/`/g, '\\`')}\`)">
+                            Copy Format
+                        </button>
+                    </div>
+                `;
+                fragment.appendChild(card);
+            });
+            
+            fontGrid.appendChild(fragment);
+        }
+
+        // --- 5. UTILITIES & EVENT LISTENERS ---
+
+        // Infinite Scroll Observer
+        function setupIntersectionObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    renderChunk();
+                }
+            }, { rootMargin: '200px' });
+            observer.observe(sentinel);
+        }
+
+        window.copyText = async function(button, text) {
+            try {
+                await navigator.clipboard.writeText(text);
+                const originalText = button.innerText;
+                button.innerText = 'Copied!';
+                button.classList.add('btn-success');
+                setTimeout(() => {
+                    button.innerText = originalText;
+                    button.classList.remove('btn-success');
+                }, 1500);
+            } catch (err) {
+                button.innerText = 'Error';
+            }
+        }
+
+        window.switchTab = function(tabId, btnElement) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // Dual Search Engine
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase().trim();
+            
+            // Emoji Tab Search
+            emojiGrid.innerHTML = '';
+            renderLimit = 0;
+            
+            if (term === '') {
+                filteredEmojis = [...allEmojis];
+            } else {
+                filteredEmojis = allEmojis.filter(emoji => 
+                    emoji.name.toLowerCase().includes(term) || 
+                    emoji.group.toLowerCase().includes(term)
+                );
+            }
+
+            if (filteredEmojis.length === 0) {
+                emojiGrid.innerHTML = '<div class="no-results">No emojis found matching your search.</div>';
+            } else {
+                renderChunk();
+            }
+
+            // Font Tab Realtime Gen
+            renderFonts(e.target.value);
+        });
+
+        // --- 6. INITIALIZATION ---
+        fetchOfficialEmojis();
+        renderFonts('Acemoji Typography');
+
+    </script>
+</body>
+</html>
