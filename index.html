@@ -3,14 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acemoji - Aesthetic Edition</title>
+    <title>Acemoji</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&family=Noto+Sans&family=Noto+Sans+Symbols&family=Noto+Sans+Symbols+2&family=Noto+Sans+Math&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
     <style>
-        /* Premium Blurple Theme */
+        /* Smooth Scrolling */
+        html { scroll-behavior: smooth; }
+
+        /* Premium Blurple Theme (Dark - Default) */
         :root {
             --bg-color: #0d0c14;
-            --surface-color: #1a1726;
-            --surface-hover: #231f33;
+            --surface-color: rgba(26, 23, 38, 0.7);
+            --surface-hover: rgba(35, 31, 51, 0.85);
             --border-color: rgba(187, 134, 252, 0.15);
             --border-focus: rgba(187, 134, 252, 0.5);
             --text-primary: #ffffff;
@@ -19,27 +27,52 @@
             --accent-hover: #d4b3ff;
             --success-color: #03dac6;
             --success-bg: rgba(3, 218, 198, 0.1);
-            --border-radius: 12px;
-            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            
-            /* Fallback font stack for Unicode Math/Script rendering (Fixes the Tofu issue) */
-            --unicode-font-stack: "Noto Sans Math", "Apple Symbols", "Segoe UI Symbol", "Cambria Math", system-ui, sans-serif;
+            --border-radius: 16px;
+            --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --unicode-font-stack: "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", "Twemoji Mozilla", "Noto Sans Symbols 2", "Noto Sans Symbols", "Noto Sans Math", "Segoe UI Symbol", "Apple Symbols", system-ui, sans-serif;
+        }
+
+        /* Light Theme Override */
+        body.light {
+            --bg-color: #f5f5f7;
+            --text-primary: #111111;
+            --text-secondary: #555555;
+            --accent-color: #6c5ce7;
+            --accent-hover: #4834d4;
         }
 
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-color);
-            background-image: radial-gradient(circle at top, rgba(187, 134, 252, 0.05) 0%, transparent 40%);
+            background-image: radial-gradient(circle at top, rgba(187, 134, 252, 0.08) 0%, transparent 50%);
             color: var(--text-primary);
             margin: 0;
-            padding: 20px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
+            transition: background-color var(--transition), color var(--transition);
+            overflow-x: hidden;
         }
 
-        /* Header */
+        /* GLOBAL GLASSMORPHISM UTILITY */
+        .glass {
+            background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01));
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 8px 32px rgba(0,0,0,0.25);
+            border-radius: var(--border-radius);
+        }
+
+        body.light .glass {
+            background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.4));
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,1), 0 8px 32px rgba(0,0,0,0.08);
+        }
+
+        /* Sticky Header */
         header {
             text-align: center;
             margin-bottom: 24px;
@@ -48,6 +81,13 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: sticky;
+            top: 0;
+            background: linear-gradient(to bottom, var(--bg-color) 70%, transparent);
+            z-index: 20;
+            padding: 15px 0 20px 0;
+            margin-top: -16px; 
+            transition: background var(--transition);
         }
 
         .header-title {
@@ -62,14 +102,18 @@
             letter-spacing: -0.5px;
         }
 
+        .header-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 12px;
+        }
+
         .stats-badge {
             font-size: 0.8rem;
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
             padding: 6px 14px;
             border-radius: 20px;
             color: var(--text-secondary);
-            margin-top: 12px;
             font-weight: 600;
         }
 
@@ -77,13 +121,13 @@
         .tabs {
             display: flex;
             gap: 8px;
-            background: var(--surface-color);
             padding: 8px;
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
+            border-radius: 20px;
             margin-bottom: 24px;
             width: 100%;
             max-width: 450px;
+            position: relative;
+            z-index: 15;
         }
 
         .tab-btn {
@@ -94,47 +138,45 @@
             font-size: 0.95rem;
             font-weight: 700;
             color: var(--text-secondary);
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
             transition: all var(--transition);
         }
 
-        .tab-btn:hover {
-            color: var(--text-primary);
-            background: rgba(255, 255, 255, 0.05);
-        }
-
+        .tab-btn:hover { color: var(--text-primary); background: rgba(187, 134, 252, 0.05); }
         .tab-btn.active {
-            background: rgba(187, 134, 252, 0.15);
+            background: rgba(187, 134, 252, 0.2);
             color: var(--accent-color);
             box-shadow: inset 0 0 0 1px var(--border-focus);
         }
+        body.light .tab-btn.active { background: rgba(108, 92, 231, 0.15); }
 
         /* Search */
         .search-container {
             width: 100%;
             max-width: 700px;
             margin-bottom: 20px;
-            position: relative;
+            position: sticky;
+            top: 100px;
+            z-index: 15;
+            border-radius: 24px;
         }
 
         .search-input {
             width: 100%;
             padding: 18px 20px 18px 55px;
             font-size: 1.05rem;
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: 24px;
+            background: transparent;
+            border: none;
             color: var(--text-primary);
             box-sizing: border-box;
             transition: all var(--transition);
+            border-radius: 24px;
         }
 
         .search-input:focus {
             outline: none;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 20px rgba(187, 134, 252, 0.15);
-            background: #211d30;
+            box-shadow: 0 0 0 2px var(--accent-color), 0 0 30px rgba(187, 134, 252, 0.2);
         }
 
         .search-icon {
@@ -143,9 +185,10 @@
             top: 50%;
             transform: translateY(-50%);
             display: flex;
+            pointer-events: none;
         }
 
-        /* Category Pills (Scrollable) */
+        /* Category Pills */
         .category-scroll {
             width: 100%;
             max-width: 1200px;
@@ -154,40 +197,75 @@
             display: flex;
             gap: 10px;
             padding-bottom: 15px;
-            margin-bottom: 20px;
-            scrollbar-width: none; /* Firefox */
+            margin-bottom: 10px;
+            scrollbar-width: none;
         }
-        
-        .category-scroll::-webkit-scrollbar {
-            display: none; /* Chrome/Safari */
-        }
+        .category-scroll::-webkit-scrollbar { display: none; }
 
         .category-pill {
-            background: var(--surface-color);
             color: var(--text-secondary);
-            border: 1px solid var(--border-color);
-            padding: 8px 16px;
+            padding: 8px 18px;
             border-radius: 20px;
             font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
             transition: all var(--transition);
             flex-shrink: 0;
+            border: 1px solid transparent;
         }
-
-        .category-pill:hover {
-            border-color: var(--accent-color);
-            color: var(--text-primary);
-        }
-
+        .category-pill:hover { border-color: var(--accent-color); color: var(--text-primary); }
         .category-pill.active {
             background: var(--accent-color);
-            color: #000;
+            color: #fff;
             border-color: var(--accent-color);
-            box-shadow: 0 4px 10px rgba(187, 134, 252, 0.3);
+            box-shadow: 0 4px 15px rgba(187, 134, 252, 0.35);
         }
 
-        /* Grids */
+        /* Featured Emoji Panel (Hero) */
+        .featured-card {
+            width: 100%;
+            padding: 30px 20px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            display: none; 
+        }
+
+        .featured-card::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle at center, rgba(187,134,252,0.1) 0%, transparent 50%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .featured-emoji {
+            font-size: 5rem;
+            line-height: 1;
+            margin-bottom: 5px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+        }
+
+        .featured-title { font-size: 1.5rem; font-weight: 800; margin: 0; text-transform: capitalize; }
+        .featured-meta {
+            font-family: 'Courier New', Courier, monospace;
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 0.9rem;
+            background: rgba(187, 134, 252, 0.1);
+            padding: 4px 12px;
+            border-radius: 12px;
+            letter-spacing: 1px;
+        }
+
+        /* Grids & Cards */
         .tab-content {
             display: none;
             width: 100%;
@@ -196,92 +274,140 @@
             align-items: center;
             animation: fadeIn 0.4s ease forwards;
         }
-
         .tab-content.active { display: flex; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .grid {
             display: grid;
-            gap: 20px;
             width: 100%;
             margin-bottom: 30px;
+            gap: 16px;
+            grid-auto-flow: dense; 
+        }
+        .grid-emojis { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+        
+        .grid-emojis .card:nth-child(7n) { grid-column: span 2; grid-row: span 2; }
+        .grid-emojis .card:nth-child(7n) .emoji-char { font-size: 4.5rem; }
+        .grid-emojis .card:nth-child(12n) { grid-column: span 2; }
+
+        @media (max-width: 600px) {
+            .grid-emojis { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+            .grid-emojis .card:nth-child(7n) { grid-column: span 1; grid-row: span 1; }
+            .grid-emojis .card:nth-child(7n) .emoji-char { font-size: 2.8rem; }
+            .grid-emojis .card:nth-child(12n) { grid-column: span 1; }
         }
 
-        .grid-emojis { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
-        .grid-fonts { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); }
+        #fontGridContainer {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            width: 100%;
+            grid-auto-flow: dense;
+        }
 
         .font-section-header {
+            grid-column: 1 / -1;
             width: 100%;
             font-size: 1.2rem;
             color: var(--accent-color);
-            margin: 30px 0 15px 0;
+            margin: 20px 0 5px 0;
             padding-bottom: 10px;
             border-bottom: 1px solid var(--border-color);
             font-weight: bold;
         }
 
-        /* Cards */
+        .live-preview-container {
+            width: 100%;
+            padding: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-sizing: border-box;
+            border: 1px dashed var(--accent-color);
+        }
+        
+        .live-preview-text {
+            font-size: 2rem;
+            color: var(--accent-hover);
+            font-weight: bold;
+            word-break: break-all;
+        }
+
         .card {
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            padding: 20px;
+            padding: 18px 12px;
             display: flex;
             flex-direction: column;
-            transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+            transition: all var(--transition);
             position: relative;
+            will-change: transform;
+            overflow: hidden;
+            cursor: pointer;
         }
 
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: linear-gradient(120deg, transparent 20%, rgba(255,255,255,0.15), transparent 80%);
+            opacity: 0;
+            transition: 0.5s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .card:hover::before { opacity: 1; transform: translateX(20%); }
         .card:hover {
-            transform: translateY(-4px);
+            transform: translateY(-8px) scale(1.05);
             border-color: var(--border-focus);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-            background: var(--surface-hover);
-            z-index: 2;
+            box-shadow: 0 0 25px rgba(187, 134, 252, 0.2), 0 15px 35px rgba(0,0,0,0.3);
+            z-index: 5;
         }
+        .card > * { position: relative; z-index: 2; }
 
-        .card-emoji-center {
-            align-items: center;
-            text-align: center;
-        }
+        .card-emoji-center { align-items: center; text-align: center; }
 
         .emoji-char {
-            font-size: 3.5rem;
-            margin-bottom: 15px;
-            font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
-            transition: transform 0.3s;
+            font-size: 2.8rem; 
+            line-height: 1;
+            margin-bottom: 10px;
+            font-family: "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-
-        .card:hover .emoji-char {
-            transform: scale(1.15);
-        }
+        .card:hover .emoji-char { transform: scale(1.15) translateY(-5px); }
 
         .emoji-name {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             text-transform: capitalize;
-            min-height: 2.5rem;
+            line-height: 1.3;
+            flex-grow: 1;
             display: flex;
             align-items: center;
-            justify-content: center;
-            line-height: 1.3;
         }
 
-        .emoji-group {
-            font-size: 0.75rem;
-            color: var(--accent-color);
-            margin-bottom: 16px;
-            background: rgba(187, 134, 252, 0.1);
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-weight: bold;
+        .skin-tone-selector {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
+        body.light .skin-tone-selector { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.1); }
+
+        .skin-swatch {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid rgba(128, 128, 128, 0.3);
+        }
+        .skin-swatch:hover { transform: scale(1.3); box-shadow: 0 0 8px var(--accent-color); }
 
         .font-name {
             font-size: 0.8rem;
@@ -294,97 +420,74 @@
             padding-bottom: 8px;
         }
 
-        /* Important Fix: Added complex unicode font stack */
         .font-display {
             font-size: 1.25rem;
             color: var(--text-primary);
             margin-bottom: 20px;
             word-break: break-all;
-            min-height: 3rem;
+            min-height: 60px;
             line-height: 1.5;
             font-family: var(--unicode-font-stack);
         }
 
-        /* Buttons */
-        .btn-group {
+        .degraded-warning {
+            font-size: 0.75rem;
+            color: #ffb74d;
+            background: rgba(255, 183, 77, 0.1);
+            padding: 4px 8px;
+            border-radius: 6px;
+            margin-bottom: 15px;
             display: flex;
-            flex-direction: column;
-            gap: 10px;
-            width: 100%;
-            margin-top: auto;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-weight: 600;
         }
 
+        .btn-group { display: flex; flex-direction: column; gap: 8px; width: 100%; margin-top: auto; }
+
         .btn {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.05);
             color: var(--text-primary);
-            border: 1px solid var(--border-color);
+            border: 1px solid rgba(255,255,255,0.1);
             padding: 10px 14px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 700;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: all var(--transition);
+            transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             width: 100%;
+            backdrop-filter: blur(5px);
         }
+        body.light .btn { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.1); }
+        .btn:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--accent-color); }
+        body.light .btn:hover { background: rgba(0,0,0,0.08); }
+        .btn:active { transform: scale(0.96); }
 
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
+        .btn-primary { background: rgba(187, 134, 252, 0.15); color: var(--accent-hover); border-color: rgba(187, 134, 252, 0.3); }
+        body.light .btn-primary { background: rgba(108, 92, 231, 0.1); color: var(--accent-color); }
+        .btn-primary:hover { background: rgba(187, 134, 252, 0.25); color: #fff; box-shadow: 0 4px 15px rgba(187, 134, 252, 0.25); }
+        body.light .btn-primary:hover { color: #111; }
+        .btn-success { background: var(--success-bg) !important; color: var(--success-color) !important; border-color: var(--success-color) !important; }
 
-        .btn-primary {
-            background: rgba(187, 134, 252, 0.1);
-            color: var(--accent-hover);
-            border-color: rgba(187, 134, 252, 0.3);
-        }
-
-        .btn-primary:hover {
-            background: rgba(187, 134, 252, 0.2);
-            border-color: var(--accent-color);
-            color: #fff;
-        }
-
-        .btn-success {
-            background: var(--success-bg) !important;
-            color: var(--success-color) !important;
-            border-color: var(--success-color) !important;
-        }
-
-        /* OS Variants */
         .os-variants {
             display: none;
             justify-content: space-around;
             width: 100%;
             padding: 12px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border: 1px inset rgba(255,255,255,0.05);
             margin-bottom: 12px;
             box-sizing: border-box;
         }
-
         .os-variants.active { display: flex; animation: fadeIn 0.2s ease; }
-
-        .os-icon {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 0.7rem;
-            color: var(--text-secondary);
-            font-weight: 600;
-        }
-
-        .os-icon img {
-            width: 28px;
-            height: 28px;
-            margin-bottom: 6px;
-            transition: transform 0.2s;
-        }
-
+        .os-icon { display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; color: var(--text-secondary); font-weight: 600; }
+        .os-icon img { width: 28px; height: 28px; margin-bottom: 6px; transition: transform 0.2s; }
         .os-icon img:hover { transform: scale(1.2); }
 
         .loading, .no-results {
@@ -397,14 +500,10 @@
             flex-direction: column;
             align-items: center;
             gap: 15px;
+            grid-column: 1 / -1;
         }
 
-        /* Infinite Scroll Sentinel */
-        #sentinel {
-            height: 40px;
-            width: 100%;
-            margin-top: 20px;
-        }
+        #sentinel, #fontSentinel { height: 40px; width: 100%; margin-top: 20px; grid-column: 1 / -1; }
     </style>
 </head>
 <body>
@@ -414,55 +513,95 @@
             <lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="loop" delay="2000" colors="primary:#bb86fc" style="width:45px;height:45px;"></lord-icon>
             Acemoji
         </h1>
-        <div class="stats-badge" id="statsBadge">Initializing Global Database...</div>
+        <div class="header-controls">
+            <div class="stats-badge glass" id="statsBadge">Initializing Global Database...</div>
+            <button id="themeToggle" class="btn" style="padding: 8px 16px; font-size: 0.75rem; width: auto;">Toggle Theme</button>
+        </div>
     </header>
 
-    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('emoji-tab', this)">3500+ Emojis</button>
-        <button class="tab-btn" onclick="switchTab('font-tab', this)">135 Fonts</button>
+    <div class="tabs glass">
+        <button class="tab-btn active" onclick="switchTab('emoji-tab', this)">Emojis</button>
+        <button class="tab-btn" onclick="switchTab('font-tab', this)">Fonts</button>
     </div>
 
-    <div class="search-container">
+    <div class="search-container glass">
         <div class="search-icon">
             <lord-icon src="https://cdn.lordicon.com/xfftqfpt.json" trigger="hover" colors="primary:#bb86fc" style="width:24px;height:24px"></lord-icon>
         </div>
-        <input type="text" id="searchInput" class="search-input" placeholder="Search emojis or type text to generate typography..." autocomplete="off">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search emojis or type text..." autocomplete="off">
     </div>
 
     <div id="emoji-tab" class="tab-content active">
+        <div class="glass featured-card" id="featuredCard">
+            <div class="featured-emoji" id="featuredEmoji">✨</div>
+            <h2 class="featured-title" id="featuredName">Select an Emoji</h2>
+            <div class="featured-meta" id="featuredMeta">U+0000 • Unicode 15.1</div>
+            <button class="btn btn-primary" id="featuredCopyBtn" style="max-width: 200px; margin-top: 10px;">
+                Copy to Clipboard
+            </button>
+        </div>
+
         <div class="category-scroll" id="emojiCategories">
-            <div class="category-pill active" onclick="filterEmojiCategory('All', this)">All Emojis</div>
-            </div>
+            <div class="category-pill glass active" onclick="filterEmojiCategory('All', this)">All Emojis</div>
+        </div>
 
         <div id="loadingIndicator" class="loading">
             <lord-icon src="https://cdn.lordicon.com/xjovhxra.json" trigger="loop" colors="primary:#bb86fc" style="width:50px;height:50px"></lord-icon>
-            Fetching Official Unicode Data...
+            Fetching Unicode 15.1 Data...
         </div>
         <div class="grid grid-emojis" id="emojiGrid"></div>
         <div id="sentinel"></div>
     </div>
 
     <div id="font-tab" class="tab-content">
-        <div class="category-scroll" id="fontCategories">
-            <div class="category-pill active" onclick="scrollToFontCategory('Mathematical')">Mathematical</div>
-            <div class="category-pill" onclick="scrollToFontCategory('Calligraphy')">Calligraphy & Script</div>
-            <div class="category-pill" onclick="scrollToFontCategory('Enclosed')">Enclosed & Special</div>
-            <div class="category-pill" onclick="scrollToFontCategory('Decorated')">Text Decorations</div>
-            <div class="category-pill" onclick="scrollToFontCategory('Glitch')">Glitch & Zalgo</div>
+        <div class="live-preview-container glass">
+            <div class="live-preview-text" id="livePreviewText">Acemoji Text</div>
         </div>
         
-        <div id="fontGridContainer" style="width: 100%;"></div>
+        <div class="category-scroll" id="fontCategories">
+            <div class="category-pill glass active" onclick="scrollToFontCategory('Mathematical')">Mathematical</div>
+            <div class="category-pill glass" onclick="scrollToFontCategory('Calligraphy')">Calligraphy</div>
+            <div class="category-pill glass" onclick="scrollToFontCategory('Enclosed')">Enclosed</div>
+            <div class="category-pill glass" onclick="scrollToFontCategory('Decorated')">Decorations</div>
+            <div class="category-pill glass" onclick="scrollToFontCategory('Glitch')">Glitch</div>
+        </div>
+        
+        <div id="fontGridContainer"></div>
     </div>
 
     <script>
-        // --- 1. CORE DATA STRUCTURES ---
+        // --- 0. THEME TOGGLE LOGIC ---
+        const toggleBtn = document.getElementById('themeToggle');
+        toggleBtn.onclick = () => {
+            document.body.classList.toggle('light');
+            localStorage.setItem("theme", document.body.classList.contains('light') ? 'light' : 'dark');
+        };
+        if (localStorage.getItem("theme") === "light") document.body.classList.add("light");
+
+        // --- 1. PREMIUM PARALLAX ENGINE (Hardware Accelerated) ---
+        let ticking = false;
+        document.addEventListener("mousemove", (e) => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const x = (e.clientX / window.innerWidth - 0.5) * 15;
+                    const y = (e.clientY / window.innerHeight - 0.5) * 15;
+                    document.querySelectorAll(".card").forEach(card => {
+                        if(!card.matches(':hover')) card.style.transform = `translate(${x}px, ${y}px)`;
+                    });
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        // --- 2. CORE DATA STRUCTURES & CONFIG ---
         let allEmojis = [];
         let filteredEmojis = [];
         let currentEmojiCategory = 'All';
         let renderLimit = 0;
-        const CHUNK_SIZE = 60;
+        const CHUNK_SIZE = 120;
+        const emojiCache = new Map();
 
-        // Base alphabets for Font Matrix
         const normalChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         
         const baseAlphabets = {
@@ -472,7 +611,7 @@
             'Serif Bold Italic': '𝑨𝑩𝑪𝑫𝑬𝑭𝑮𝑯𝑰𝑱𝑲𝑳𝑴𝑵𝑶𝑷𝑸𝑹𝑺𝑻𝑼𝑽𝑾𝑿𝒀Զ𝒂𝒃𝒄𝒅𝒆𝒇𝒈𝒉𝒊𝒋𝒌𝒍𝒎𝒏𝒐𝒑𝒒𝒓𝒔𝒕𝒖𝒗𝒘𝒙𝒚𝒛𝟎𝟏𝟐𝟑𝟒𝟓𝟔𝟕𝟖𝟗',
             'Sans': '𝖠𝖡𝖢𝖣𝖤𝖥𝖦𝖧𝖨𝖩𝖪𝖫𝖬𝖭𝖮𝖯𝖰𝖱𝖲𝖳𝖴𝖵𝖶𝖷𝖸𝖹𝖺𝖻𝖼𝖽𝖾𝖿𝗀𝗁𝗂𝗃𝗄𝗅𝗆𝗇𝗈𝗉𝗊𝗋𝗌𝗍𝗎𝗏𝗐𝗑𝗒𝗓𝟢𝟣𝟤𝟥𝟦𝟧𝟨𝟩𝟪𝟫',
             'Sans Bold': '𝗔𝗕𝗖𝗗𝗘𝗙𝗚𝗛𝗜𝗝𝗞𝗟𝗠𝗡𝗢𝗣𝗤𝗥𝗦𝗧𝗨𝗩𝗪𝗫𝗬𝗭𝗮𝗯𝗰𝗱𝗲𝗳𝗴𝗵𝗶𝗷𝗸𝗹𝗺𝗻𝗼𝗽𝗾𝗿𝘀𝘁𝘂𝘃𝘄𝘅𝘆𝘇𝟬𝟭𝟮𝟯𝟰𝟱𝟲𝟳𝟴𝟵',
-            'Sans Italic': '𝘈𝘉𝘊𝘋𝘌𝘍𝘎𝘏𝘐𝘑𝘒𝘓𝘔𝘕𝘖𝘗𝘘𝘙𝘚𝘛𝘜𝘝𝘞𝘟𝘠𝘡𝘢𝘣𝘤𝘥𝘦𝘧𝘨𝘩𝘪𝘫𝘬𝘭𝘮𝘯𝘰𝘱𝘲𝘳𝘴𝘵𝘶𝘷𝘸𝘹𝘺𝘻0123456789',
+            'Sans Italic': '𝘈𝘉𝘊𝘋𝘌𝘍𝘎𝘏𝘐𝘑𝘒𝘓𝘔𝘕𝘖𝘗𝘘𝘙𝘚𝘛𝘜𝘝𝘞𝘟𝘠𝘡𝘢𝘣𝘤𝘥𝘦𝘧𝘨𝘩𝘪𝘫𝘬𝘭𝘮𝘯𝘰𝘱𝘲𝘳𝘴𝘵𝘶𝘷𝑤𝘹𝘺𝘻0123456789',
             'Sans Bold Italic': '𝘼𝘽𝘾𝘿𝙀𝙁𝙂𝙃𝙄𝙅𝙆𝙇𝙈𝙉𝙊𝙋𝙌𝙍𝙎𝙏𝙐𝙑𝙒𝙓𝙔𝙕𝙖𝙗𝙘𝙙𝙚𝙛𝙜𝙝𝙞𝙟𝙠𝙡𝙢𝙣𝙤𝙥𝙦𝙧𝙨𝙩𝙪𝙫𝙬𝙭𝙮𝙯0123456789',
             'Monospace': '𝙰𝙱𝙲𝙳𝙴𝙵𝙶𝙷𝙸𝙹𝙺𝙻𝙼𝙽𝙾𝙿𝚀𝚁𝚂𝚃𝚄𝚅𝚆𝚇𝚈𝚉𝚊𝚋𝚌𝚍𝚎𝚏𝚐𝚑𝚒𝚓𝚔𝚕𝚖𝚗𝚘𝚙𝚚𝚛𝚜𝚝𝚞𝚟𝚠𝚡𝚢𝚣𝟶𝟷𝟸𝟹𝟺𝟻𝟼𝟽𝟾𝟿',
             'Script': '𝒜ℬ𝒞𝒟ℰℱ𝒢ℋℐ𝒥𝒦ℒℳ𝒩𝒪𝒫𝒬ℛ𝒮𝒯𝒰𝒱𝒲𝒳𝒴𝒵𝒶𝒷𝒸𝒹ℯ𝒻ℊ𝒽𝒾𝒿𝓀𝓁𝓂𝓃ℴ𝓅𝓆𝓇𝓈𝓉𝓊𝓋𝓌𝓍𝓎𝓏0123456789',
@@ -480,51 +619,52 @@
             'Fraktur': '𝔄𝔅ℭ𝔇𝔈𝔉𝔊ℌℑ𝔍𝔎𝔏𝔐𝔑𝔒𝔓𝔔ℜ𝔖𝔗𝔘𝔙𝔚𝔛𝔜ℨ𝔞𝔟𝔠𝔡𝔢𝔣𝔤𝔥𝔦𝔧𝔨𝔩𝔪𝔫𝔬𝔭𝔮𝔯𝔰𝔱𝔲𝔳𝔴𝔵𝔶𝔷0123456789',
             'Fraktur Bold': '𝕬𝕭𝕮𝕯𝕰𝕱𝕲𝕳𝕴𝕵𝕶𝕷𝕸𝕹𝕺𝕻𝕼𝕽𝕾𝕿𝖀𝖁𝖂𝖃𝖄𝖅𝖆𝖇𝖈𝖉𝖊𝖋𝖌𝖍𝖎𝖏𝖐𝖑𝖒𝖓𝖔𝖕𝖖𝖗𝖘𝖙𝖚𝖛𝖜𝖝𝖞𝖟0123456789',
             'Double Struck': '𝔸𝔹ℂ𝔻𝔼𝔽𝔾ℍ𝕀𝕁𝕂𝕃𝕄ℕ𝕆ℙℚℝ𝕊𝕋𝕌𝕍𝕎𝕏𝕐ℤ𝕒𝕓𝕔𝕕𝕖𝕗𝕘𝕙𝕚𝕛𝕜𝕝𝕞𝕟𝕠𝕡𝕢𝕣𝕤𝕥𝕦𝕧𝕨𝕩𝕪𝕫𝟘𝟙𝟚𝟛𝟜𝟝𝟞𝟟𝟠𝟡',
-            'Small Caps': 'ᴀʙᴄᴅᴇғɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢᴀʙᴄᴅᴇғɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢ0123456789'
+            'Small Caps': 'ᴀʙᴄᴅᴇғɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢᴀʙᴄᴅᴇғɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢ0123456789',
+            'Regional Indicator': '🇦🇧🇨🇩🇪🇫🇬🇭🇮🇯🇰🇱🇲🇳🇴🇵🇶🇷🇸🇹🇺🇻🇼🇽🇾🇿🇦🇧🇨🇩🇪🇫🇬🇭🇮🇯🇰🇱🇲🇳🇴🇵🇶🇷🇸🇹🇺🇻🇼🇽🇾🇿0123456789',
+            'Superscript': 'ᴬᴮᶜᴰᴱᶠᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾQᴿˢᵀᵁⱽᵂˣʸᶻᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒᵖqʳˢᵗᵘᵛʷˣʸᶻ⁰¹²³⁴⁵⁶⁷⁸⁹',
+            'Subscript': 'ₐᵦ𝒸𝒹ₑ𝒻𝓰ₕᵢⱼₖₗₘₙₒₚqᵣₛₜᵤᵥwₓᵧzₐᵦ𝒸𝒹ₑ𝒻𝓰ₕᵢⱼₖₗₘₙₒₚqᵣₛₜᵤᵥwₓᵧz₀₁₂₃₄₅₆₇₈₉'
         };
 
-        const decorators = {
-            '': '', // Base
-            'Underlined': '\u0332',
-            'Double Underline': '\u0333',
-            'Strikethrough': '\u0336',
-            'Overline': '\u0305',
-            'Slash': '\u0338',
-            'Wavy': '\u0330',
-            'Crossed': '\u0337',
-            'Dots Below': '\u0324'
-        };
+        const coreDecorators = [
+            { name: '', mod: '' }, { name: 'Underlined', mod: '\u0332' }, { name: 'Double Underline', mod: '\u0333' },
+            { name: 'Strikethrough', mod: '\u0336' }, { name: 'Overline', mod: '\u0305' }, { name: 'Slash', mod: '\u0338' },
+            { name: 'Wavy', mod: '\u0330' }, { name: 'Crossed', mod: '\u0337' }, { name: 'Dots Below', mod: '\u0324' }
+        ];
+
+        const expandedDecorators = [...coreDecorators];
+        coreDecorators.forEach(d1 => {
+            if (!d1.mod) return;
+            coreDecorators.forEach(d2 => {
+                if (!d2.mod || d1.name === d2.name) return;
+                if (['Strikethrough', 'Underlined', 'Wavy', 'Overline'].includes(d1.name)) {
+                    if (expandedDecorators.length > 80) return; // FIX: Capped decorator explosion
+                    expandedDecorators.push({ name: `${d1.name} & ${d2.name}`, mod: d1.mod + d2.mod });
+                }
+            });
+        });
 
         const specialFonts = {
             'Circled': 'ⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ⓪①②③④⑤⑥⑦⑧⑨',
             'Neg Circled': '🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩0123456789',
             'Squared': '🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉0123456789',
-            'Parenthesized': '⒜⒝⒞⒟⒠⒡⒢⒣⒤⒥⒦⒧⒨⒩⒪⒫⒬⒭⒮⒯⒰⒱⒲⒳⒴⒵⒜⒝⒞⒟⒠⒡⒢⒣⒤⒥⒦⒧⒨⒩⒪⒫⒬⒭⒮⒯⒰⒱⒲⒳⒴⒵⑴⑵⑶⑷⑸⑹⒧⒨⒩',
-            'Fullwidth': 'ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ０１２３４５６７８９',
+            'Neg Squared': '🅰🅱🅲🅳🅴🅵🅶🅷🅸🅹🅺🅻🅼🅽🅾🅿🆀🆁🆂🆃🆄🆅🆆🆇🆈🆉🅰🅱🅲🅳🅴🅵🅶🅷🅸🅹🅺🅻🅼🅽🅾🅿🆀🆁🆂🆃🆄🆅🆆🆇🆈🆉0123456789',
             'Leetspeak': '48CD3F6H1JKLMN0PQR57UVWXY248cd3f6h1jklmn0pqr57uvwxy20123456789',
             'Upside Down': '∀qƆpƎℲפHIſʞ˥WNOԀQᴚS⊥∩ΛMX⅄Zɐqɔpǝɟƃɥıɾʞlɯuodbɹsʇnʌʍxʎz0123456789'
         };
 
-        const categorizedFonts = {
-            'Mathematical': [],
-            'Calligraphy': [],
-            'Enclosed': [],
-            'Decorated': [],
-            'Glitch': []
-        };
+        const categorizedFonts = { 'Mathematical': [], 'Calligraphy': [], 'Enclosed': [], 'Decorated': [], 'Glitch': [] };
 
-        // Classify Fonts for Categories
         Object.keys(baseAlphabets).forEach(baseName => {
             if(baseName === 'Normal') return;
-            
             let cat = 'Mathematical';
             if(['Script', 'Script Bold', 'Fraktur', 'Fraktur Bold', 'Small Caps'].includes(baseName)) cat = 'Calligraphy';
-            if(baseName === 'Double Struck') cat = 'Enclosed';
+            if(['Double Struck', 'Regional Indicator'].includes(baseName)) cat = 'Enclosed';
+            if(['Superscript', 'Subscript'].includes(baseName)) cat = 'Decorated';
 
-            Object.keys(decorators).forEach(decName => {
-                const fullName = decName ? `${baseName} ${decName}` : baseName;
-                const fontObj = { name: fullName, map: baseAlphabets[baseName], mod: decorators[decName] };
-                if (decName) categorizedFonts['Decorated'].push(fontObj);
+            expandedDecorators.forEach(dec => {
+                const fullName = dec.name ? `${baseName} ${dec.name}` : baseName;
+                const fontObj = { name: fullName, map: baseAlphabets[baseName], mod: dec.mod };
+                if (dec.name) categorizedFonts['Decorated'].push(fontObj);
                 else categorizedFonts[cat].push(fontObj);
             });
         });
@@ -534,78 +674,95 @@
             if(['Leetspeak', 'Upside Down'].includes(specName)) cat = 'Glitch';
             categorizedFonts[cat].push({ name: specName, map: specialFonts[specName], mod: specName === 'Upside Down' ? 'reverse' : '' });
         });
-        
-        categorizedFonts['Glitch'].push({ name: 'Zalgo Light', map: baseAlphabets['Normal'], mod: 'zalgo1' });
-        categorizedFonts['Glitch'].push({ name: 'Zalgo Heavy', map: baseAlphabets['Normal'], mod: 'zalgo2' });
+        categorizedFonts['Glitch'].push({ name: 'Zalgo', map: baseAlphabets['Normal'], mod: 'zalgo1' });
 
-        // --- 2. DOM ELEMENTS ---
+        // Flattened structure for the new virtualized font engine
+        let flattenedFontData = [];
+        Object.keys(categorizedFonts).forEach(cat => {
+            flattenedFontData.push({ type: 'header', id: `font-cat-${cat}`, text: cat });
+            categorizedFonts[cat].forEach(fontObj => {
+                flattenedFontData.push({ type: 'font', ...fontObj });
+            });
+        });
+
+        // --- 3. DOM & FAST GLYPH CACHE (GPU Readback Nuked) ---
         const emojiGrid = document.getElementById('emojiGrid');
-        const fontGridContainer = document.getElementById('fontGridContainer');
         const searchInput = document.getElementById('searchInput');
-        const loadingIndicator = document.getElementById('loadingIndicator');
-        const sentinel = document.getElementById('sentinel');
         const statsBadge = document.getElementById('statsBadge');
         const emojiCategoryBox = document.getElementById('emojiCategories');
+        
+        const glyphCache = new Map();
+        const testCanvas = document.createElement("canvas");
+        const testCtx = testCanvas.getContext("2d", { willReadFrequently: true });
+        
+        // FIX: Ultra-fast canvas measureText check, replaces catastrophic getImageData() loop
+        function canRender(char) {
+            if (glyphCache.has(char)) return glyphCache.get(char);
+            testCtx.font = '16px system-ui';
+            const width = testCtx.measureText(char).width;
+            const supported = width > 0 && width !== testCtx.measureText('\uFFFD').width;
+            glyphCache.set(char, supported);
+            return supported;
+        }
 
-        // --- 3. DATA FETCHING ---
+        // --- 4. DATA FETCHING (Unicode 15.1 Pipeline) ---
+        function getCodePoint(char) {
+            return "U+" + char.codePointAt(0).toString(16).toUpperCase().padStart(4, '0');
+        }
+
         async function fetchOfficialEmojis() {
+            const URL = "https://unpkg.com/emoji.json@15.1.0/emoji.json";
             try {
-                const response = await fetch('https://unpkg.com/unicode-emoji-json@0.4.0/data-by-emoji.json');
-                const data = await response.json();
+                const res = await fetch(URL);
+                if (!res.ok) throw new Error("Bad response");
+                const data = await res.json();
                 
-                let uniqueGroups = new Set();
-
-                allEmojis = Object.keys(data).map(char => {
-                    uniqueGroups.add(data[char].group);
+                const uniqueGroups = new Set();
+                allEmojis = data.map(e => {
+                    const category = e.category || 'Symbols';
+                    uniqueGroups.add(category);
                     return {
-                        char: char,
-                        name: data[char].name,
-                        group: data[char].group
+                        char: e.char || e.codes.split(' ').map(c=>String.fromCodePoint(parseInt(c,16))).join(''),
+                        name: e.name,
+                        group: category,
+                        subgroup: e.subcategory || '',
+                        skins: e.name.includes("skin tone") || (e.skin_tone_support || false),
+                        version: "15.1" 
                     };
                 });
 
-                // Generate Emoji Category Pills dynamically
                 uniqueGroups.forEach(group => {
                     const pill = document.createElement('div');
-                    pill.className = 'category-pill';
-                    pill.innerText = group;
+                    pill.className = 'category-pill glass';
+                    pill.innerText = group.split(' & ')[0]; 
                     pill.onclick = function() { filterEmojiCategory(group, this); };
                     emojiCategoryBox.appendChild(pill);
                 });
 
                 filteredEmojis = [...allEmojis];
-                statsBadge.innerText = `${allEmojis.length} Emojis Loaded`;
-                loadingIndicator.style.display = 'none';
-                
+                statsBadge.innerText = `${allEmojis.length} Unicode 15.1 Emojis`;
+                document.getElementById('loadingIndicator').style.display = 'none';
                 renderChunk();
                 setupIntersectionObserver();
-            } catch (error) {
-                console.error("Fetch failed, fallback.", error);
-                allEmojis = [
-                    { char: '😀', name: 'grinning face', group: 'Smileys & Emotion' },
-                    { char: '🚀', name: 'rocket', group: 'Travel & Places' },
-                    { char: '💻', name: 'laptop', group: 'Objects' },
-                    { char: '🔥', name: 'fire', group: 'Activities' },
-                    { char: '❤️', name: 'red heart', group: 'Smileys & Emotion' }
-                ];
-                filteredEmojis = [...allEmojis];
-                statsBadge.innerText = 'Offline Mode';
-                loadingIndicator.style.display = 'none';
-                renderChunk();
+            } catch (err) {
+                console.error(err);
+                statsBadge.innerText = 'Dataset Load Error';
             }
         }
 
-        // --- 4. RENDER LOGIC ---
+        // --- 5. EMOJI RENDER LOGIC ---
+        function scoreMatch(name, term) {
+            if (name.startsWith(term)) return 3;
+            if (name.includes(term)) return 2;
+            return 1;
+        }
 
         function filterEmojiCategory(group, pillElement) {
-            // Update active pill styling
             document.querySelectorAll('#emojiCategories .category-pill').forEach(p => p.classList.remove('active'));
             pillElement.classList.add('active');
-            
             currentEmojiCategory = group;
             emojiGrid.innerHTML = '';
             renderLimit = 0;
-            
             applySearchAndFilter();
         }
 
@@ -618,127 +775,105 @@
                 return matchesSearch && matchesCategory;
             });
 
+            if (term !== '') {
+                filteredEmojis.sort((a, b) => scoreMatch(b.name.toLowerCase(), term) - scoreMatch(a.name.toLowerCase(), term));
+            }
+
             emojiGrid.innerHTML = '';
             renderLimit = 0;
+            if (filteredEmojis.length > 0) renderChunk();
+        }
 
-            if (filteredEmojis.length === 0) {
-                emojiGrid.innerHTML = `
-                    <div class="no-results">
-                        <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop" colors="primary:#a39eb5" style="width:40px;height:40px"></lord-icon>
-                        No emojis found matching criteria.
-                    </div>`;
-            } else {
-                renderChunk();
-            }
+        window.setFeatured = function(char, name, hex, version) {
+            const panel = document.getElementById('featuredCard');
+            panel.style.display = 'flex';
+            document.getElementById('featuredEmoji').innerText = char;
+            document.getElementById('featuredName').innerText = name;
+            document.getElementById('featuredMeta').innerText = `${hex} • Unicode ${version}`;
+            
+            const copyBtn = document.getElementById('featuredCopyBtn');
+            copyBtn.onclick = () => copyText(copyBtn, char);
+            
+            panel.scrollIntoView({ behavior: 'smooth', block: 'end' });
         }
 
         function renderChunk() {
             if (renderLimit >= filteredEmojis.length) return;
 
-            const fragment = document.createDocumentFragment();
-            const chunk = filteredEmojis.slice(renderLimit, renderLimit + CHUNK_SIZE);
+            const performRender = () => {
+                const fragment = document.createDocumentFragment();
+                const chunk = filteredEmojis.slice(renderLimit, renderLimit + CHUNK_SIZE);
 
-            chunk.forEach((emoji, index) => {
-                const globalIndex = renderLimit + index;
-                const card = document.createElement('div');
-                card.className = 'card card-emoji-center';
-                
-                // Using Twemoji (twitter) instead of google to avoid "creepy" blobs
-                card.innerHTML = `
-                    <div class="emoji-char">${emoji.char}</div>
-                    <div class="emoji-name">${emoji.name}</div>
-                    <div class="emoji-group">${emoji.group}</div>
+                chunk.forEach((emoji, index) => {
+                    const globalIndex = renderLimit + index;
+                    const hexCode = getCodePoint(emoji.char);
                     
-                    <div class="os-variants" id="os-${globalIndex}">
-                        <div class="os-icon"><img src="https://emojicdn.elk.sh/${emoji.char}?style=apple" alt="Apple" onerror="this.parentElement.style.display='none'"><span>Apple</span></div>
-                        <div class="os-icon"><img src="https://emojicdn.elk.sh/${emoji.char}?style=twitter" alt="Twitter" onerror="this.parentElement.style.display='none'"><span>Twemoji</span></div>
-                        <div class="os-icon"><img src="https://emojicdn.elk.sh/${emoji.char}?style=samsung" alt="Samsung" onerror="this.parentElement.style.display='none'"><span>Samsung</span></div>
-                    </div>
+                    if (emojiCache.has(emoji.char)) {
+                        fragment.appendChild(emojiCache.get(emoji.char));
+                        return;
+                    }
 
-                    <div class="btn-group">
-                        <button class="btn" onclick="document.getElementById('os-${globalIndex}').classList.toggle('active')">
-                            <lord-icon src="https://cdn.lordicon.com/qwwyypgk.json" trigger="hover" colors="primary:#ffffff" style="width:16px;height:16px"></lord-icon>
-                            Compare
-                        </button>
-                        <button class="btn btn-primary" onclick="copyText(this, '${emoji.char}')">
-                            <lord-icon src="https://cdn.lordicon.com/nocovwne.json" trigger="hover" colors="primary:#bb86fc" style="width:16px;height:16px"></lord-icon>
-                            Copy Emoji
-                        </button>
-                    </div>
-                `;
-                fragment.appendChild(card);
-            });
-
-            emojiGrid.appendChild(fragment);
-            renderLimit += CHUNK_SIZE;
-        }
-
-        // Tofu-Safe Font Generator (Handles surrogate pairs properly using Array.from)
-        function generateFontString(text, fontObj) {
-            let result = '';
-            // Critical fix for missing chars: split input and mapping map via Array.from to preserve surrogate pairs
-            let mapArr = Array.from(fontObj.map);
-            let toProcess = fontObj.mod === 'reverse' ? text.split('').reverse().join('') : text;
-            let textArray = Array.from(toProcess); 
-            
-            for (let char of textArray) {
-                const index = normalChars.indexOf(char);
-                let newChar = index !== -1 ? mapArr[index] : char;
-                
-                if (fontObj.mod && !['reverse', 'zalgo1', 'zalgo2'].includes(fontObj.mod)) {
-                    newChar += fontObj.mod;
-                }
-                result += newChar;
-            }
-
-            if (fontObj.mod === 'zalgo1') result = Array.from(result).map(c => c + '\u030d\u0324').join('');
-            if (fontObj.mod === 'zalgo2') result = Array.from(result).map(c => c + '\u030d\u030e\u0304\u0310\u0324\u0317\u032d').join('');
-            
-            return result;
-        }
-
-        function renderFonts(inputText) {
-            fontGridContainer.innerHTML = '';
-            const textToConvert = inputText.trim() === '' ? 'Acemoji Text' : inputText;
-
-            Object.keys(categorizedFonts).forEach(cat => {
-                const header = document.createElement('div');
-                header.className = 'font-section-header';
-                header.id = `font-cat-${cat}`;
-                header.innerText = cat;
-                fontGridContainer.appendChild(header);
-
-                const grid = document.createElement('div');
-                grid.className = 'grid grid-fonts';
-
-                categorizedFonts[cat].forEach(fontObj => {
-                    const fancyText = generateFontString(textToConvert, fontObj);
                     const card = document.createElement('div');
-                    card.className = 'card';
+                    card.className = 'card glass card-emoji-center';
+                    card.onclick = (e) => {
+                        if(e.target.tagName !== 'BUTTON' && !e.target.classList.contains('skin-swatch')) {
+                            setFeatured(emoji.char, emoji.name, hexCode, emoji.version);
+                        }
+                    };
                     
+                    const skinToneUI = emoji.skins ? `
+                        <div class="skin-tone-selector">
+                            <div class="skin-swatch" style="background:#fadcbc" onclick="applySkinTone('${emoji.char}', '🏻', '${globalIndex}')"></div>
+                            <div class="skin-swatch" style="background:#e0bb95" onclick="applySkinTone('${emoji.char}', '🏼', '${globalIndex}')"></div>
+                            <div class="skin-swatch" style="background:#bf8f68" onclick="applySkinTone('${emoji.char}', '🏽', '${globalIndex}')"></div>
+                            <div class="skin-swatch" style="background:#9b643d" onclick="applySkinTone('${emoji.char}', '🏾', '${globalIndex}')"></div>
+                            <div class="skin-swatch" style="background:#594640" onclick="applySkinTone('${emoji.char}', '🏿', '${globalIndex}')"></div>
+                        </div>
+                    ` : '';
+
                     card.innerHTML = `
-                        <div class="font-name">${fontObj.name}</div>
-                        <div class="font-display">${fancyText}</div>
+                        <div class="emoji-char" id="emoji-char-${globalIndex}">${emoji.char}</div>
+                        ${skinToneUI}
+                        <div class="emoji-name">${emoji.name}</div>
+                        
+                        <div class="os-variants" id="os-${globalIndex}">
+                            <div class="os-icon"><img src="https://emojicdn.elk.sh/${emoji.char}?style=apple" alt="Apple" onerror="this.parentElement.style.display='none'"><span>Apple</span></div>
+                            <div class="os-icon"><img src="https://emojicdn.elk.sh/${emoji.char}?style=twitter" alt="Twitter" onerror="this.parentElement.style.display='none'"><span>Twemoji</span></div>
+                        </div>
+
                         <div class="btn-group">
-                            <button class="btn btn-primary" onclick="copyText(this, \`${fancyText.replace(/\\/g, '\\\\').replace(/`/g, '\\`')}\`)">
-                                <lord-icon src="https://cdn.lordicon.com/nocovwne.json" trigger="hover" colors="primary:#bb86fc" style="width:16px;height:16px"></lord-icon>
-                                Copy Format
+                            <button class="btn" onclick="document.getElementById('os-${globalIndex}').classList.toggle('active')">
+                                Compare OS
+                            </button>
+                            <button class="btn btn-primary" id="copy-btn-${globalIndex}" onclick="copyText(this, '${emoji.char}')">
+                                Copy
                             </button>
                         </div>
                     `;
-                    grid.appendChild(card);
+                    
+                    emojiCache.set(emoji.char, card);
+                    fragment.appendChild(card);
                 });
-                fontGridContainer.appendChild(grid);
-            });
+
+                emojiGrid.appendChild(fragment);
+                renderLimit += CHUNK_SIZE;
+            };
+
+            window.requestIdleCallback ? requestIdleCallback(performRender) : setTimeout(performRender, 0);
         }
 
-        // --- 5. UTILITIES & EVENT LISTENERS ---
+        // --- 6. UTILITIES & TAB AWARENESS ---
+        window.applySkinTone = function(baseChar, toneChar, indexId) {
+            const finalChar = baseChar.replace(/[\u{1F3FB}-\u{1F3FF}]/u, '') + toneChar;
+            document.getElementById(`emoji-char-${indexId}`).innerText = finalChar;
+            document.getElementById(`copy-btn-${indexId}`).setAttribute('onclick', `copyText(this, '${finalChar}')`);
+        }
 
         function setupIntersectionObserver() {
             const observer = new IntersectionObserver((entries) => {
                 if (entries[0].isIntersecting) renderChunk();
-            }, { rootMargin: '300px' });
-            observer.observe(sentinel);
+            }, { rootMargin: '400px' });
+            observer.observe(document.getElementById('sentinel'));
         }
 
         window.copyText = async function(button, text) {
@@ -747,41 +882,160 @@
                 const originalHTML = button.innerHTML;
                 button.innerHTML = 'Copied! ✨';
                 button.classList.add('btn-success');
-                setTimeout(() => {
-                    button.innerHTML = originalHTML;
-                    button.classList.remove('btn-success');
-                }, 1500);
-            } catch (err) {
-                button.innerText = 'Error';
-            }
+                setTimeout(() => { button.innerHTML = originalHTML; button.classList.remove('btn-success'); }, 1500);
+            } catch (err) { button.innerText = 'Error'; }
         }
 
+        // FIX: Tab Lifecycle Awareness 
         window.switchTab = function(tabId, btnElement) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             btnElement.classList.add('active');
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
+
+            if (tabId === 'font-tab') {
+                renderFonts(searchInput.value, true);
+            }
+        }
+
+        // FIX: Aggressive Debouncing
+        searchInput.addEventListener('input', (e) => {
+            if (document.getElementById('emoji-tab').classList.contains('active')) {
+                applySearchAndFilter();
+            }
+            document.getElementById('livePreviewText').innerText = e.target.value || "Acemoji Text";
+            
+            clearTimeout(window.fontRenderTimeout);
+            window.fontRenderTimeout = setTimeout(() => {
+                if (document.getElementById('font-tab').classList.contains('active')) {
+                    renderFonts(e.target.value, true);
+                }
+            }, 500);
+        });
+
+        // --- 7. REWRITTEN VIRTUALIZED FONT ENGINE ---
+        function applyMultiDecor(text, decorators) {
+             const MAX = 2; 
+             const mods = decorators.substring(0, MAX);
+             return Array.from(text).map(c => mods.split('').reduce((acc, d) => acc + d, c)).join('');
+        }
+
+        function safeNormalize(text) {
+            return text.normalize("NFKD").replace(/[\u0300-\u036f]+/g, '');
+        }
+
+        function generateFontString(text, fontObj) {
+            let result = '';
+            let isDegraded = false;
+            const mapArr = Array.from(fontObj.map);
+            const textArray = Array.from(fontObj.mod === 'reverse' ? text.split('').reverse().join('') : text);
+            
+            for (let char of textArray) {
+                const index = normalChars.indexOf(char);
+                let newChar = index !== -1 ? mapArr[index] : char;
+                
+                if (fontObj.mod && !['reverse', 'zalgo1', 'zalgo2'].includes(fontObj.mod)) {
+                    newChar = applyMultiDecor(safeNormalize(newChar), fontObj.mod);
+                }
+                
+                if (!canRender(newChar)) {
+                    newChar = char;
+                    isDegraded = true;
+                }
+                result += newChar;
+            }
+
+            if (fontObj.mod === 'zalgo1') {
+                result = Array.from(result).map(c => {
+                    if (canRender(c + '\u030d')) return c + '\u030d';
+                    isDegraded = true; return c;
+                }).join('');
+            }
+            return { text: result, isDegraded };
+        }
+
+        // FIX: Virtualized Font Renderer with chunks
+        let fontRenderIndex = 0;
+        const FONT_CHUNK = 20;
+        const fontGridContainer = document.getElementById('fontGridContainer');
+        
+        // FIX: Sentinel injected for fonts
+        const fontSentinel = document.createElement("div");
+        fontSentinel.id = "fontSentinel";
+        
+        const fontObserver = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting && document.getElementById('font-tab').classList.contains('active')) {
+                renderFonts(searchInput.value, false);
+            }
+        }, { rootMargin: "400px" });
+
+        function renderFonts(inputText, reset = true) {
+            if (reset) {
+                fontGridContainer.innerHTML = '';
+                fontRenderIndex = 0;
+            }
+            
+            const textToConvert = inputText.trim() || "Acemoji Text";
+            const chunk = flattenedFontData.slice(fontRenderIndex, fontRenderIndex + FONT_CHUNK);
+            if (chunk.length === 0) return;
+
+            const fragment = document.createDocumentFragment();
+
+            chunk.forEach(item => {
+                if (item.type === 'header') {
+                    const header = document.createElement('div');
+                    header.className = 'font-section-header';
+                    header.id = item.id;
+                    header.innerText = item.text;
+                    fragment.appendChild(header);
+                } else {
+                    const generatedData = generateFontString(textToConvert, item);
+                    const fancyText = generatedData.text;
+                    const degradedWarningHtml = generatedData.isDegraded ? `
+                        <div class="degraded-warning">Limited support</div>
+                    ` : '';
+
+                    const card = document.createElement('div');
+                    card.className = 'card glass';
+                    card.innerHTML = `
+                        <div class="font-name">${item.name}</div>
+                        ${degradedWarningHtml}
+                        <div class="font-display">${fancyText}</div>
+                        <div class="btn-group">
+                            <button class="btn btn-primary" onclick="copyText(this, \`${fancyText.replace(/\\/g, '\\\\').replace(/`/g, '\\`')}\`)">
+                                Copy Font
+                            </button>
+                        </div>
+                    `;
+                    fragment.appendChild(card);
+                }
+            });
+
+            fontGridContainer.appendChild(fragment);
+            fontRenderIndex += FONT_CHUNK;
+
+            // Maintain Sentinel at the bottom of the grid
+            fontGridContainer.appendChild(fontSentinel);
+            fontObserver.observe(fontSentinel);
         }
 
         window.scrollToFontCategory = function(catName) {
             document.querySelectorAll('#fontCategories .category-pill').forEach(p => p.classList.remove('active'));
             event.target.classList.add('active');
             
-            const target = document.getElementById(`font-cat-${catName}`);
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // Force render until header is found if it hasn't rendered yet
+            const targetId = `font-cat-${catName}`;
+            let attempts = 0;
+            while (!document.getElementById(targetId) && fontRenderIndex < flattenedFontData.length && attempts < 10) {
+                renderFonts(searchInput.value, false);
+                attempts++;
             }
+            
+            const target = document.getElementById(targetId);
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-
-        searchInput.addEventListener('input', (e) => {
-            applySearchAndFilter();
-            renderFonts(e.target.value);
-        });
-
-        // --- 6. INITIALIZATION ---
+        
         fetchOfficialEmojis();
-        renderFonts('Acemoji Text');
-
     </script>
 </body>
 </html>
